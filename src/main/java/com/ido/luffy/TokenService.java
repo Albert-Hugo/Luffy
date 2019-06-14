@@ -51,7 +51,7 @@ public class TokenService {
             String token = JWT.create()
                     .withIssuer(key)
                     .withExpiresAt(addMinutes(new Date(), TOKEN_EXPIRE_TIME))
-                    .withClaim("userId", user.getUserId())
+                    .withClaim("userId", user.getUserId().toString())
                     .withClaim("role", user.getRole())
                     .sign(algorithm);
             return token;
@@ -92,6 +92,11 @@ public class TokenService {
 
                 @Override
                 public String getUserName() {
+                    return null;
+                }
+
+                @Override
+                public Object getPayload() {
                     return null;
                 }
             };

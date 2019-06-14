@@ -1,58 +1,64 @@
 package com.ido.luffy;
 
 
-import java.util.Map;
 import java.util.Set;
 
-public class SecurityManager {
+public class SecurityManager<ID> {
     public static final String ADMIN_ROLE = RoleConstant.ADMIN;
-    private static Map<String, Set<String>> rolesUrlTable;
-    private static ThreadLocal<Authentication> authenticationThreadLocal = new ThreadLocal<>();
-    private static RolePermissionRepo rolePermissionRepo;
+    private ThreadLocal<Authentication<ID>> authenticationThreadLocal = new ThreadLocal<>();
+
+    /**
+     * init the security manager
+     *
+     * @param rolePermissionRepo the repository to get the role permission
+     */
+    public SecurityManager(RolePermissionRepo rolePermissionRepo) {
+        this.rolePermissionRepo = rolePermissionRepo;
+    }
+
+    private RolePermissionRepo rolePermissionRepo;
+
 
     /**
      * need to set authentication after user pass jtw token verification
      *
      * @param a
      */
-    public static void setUserAuthorization(Authentication a) {
+    public void setUserAuthorization(Authentication<ID> a) {
         authenticationThreadLocal.set(a);
 
 
     }
 
-    public static Authentication getUserAuthorization() {
-        Authentication authentication = authenticationThreadLocal.get();
-        return authentication;
+    public Authentication<ID> getUserAuthorization() {
+        return authenticationThreadLocal.get();
 
     }
 
-
-    public static Integer getUserId() {
-        Authentication a = getUserAuthorization();
+    /**
+     * get the user id
+     *
+     * @return
+     */
+    public ID getUserId() {
+        Authentication<ID> a = getUserAuthorization();
         if (a == null) {
             return null;
         }
 
-        return Integer.valueOf(a.getUserId());
+        return a.getUserId();
 
 
     }
 
 
     /**
-     * @param table
+     * get thr permission by role
+     *
+     * @param role the role
+     * @return the permission set
      */
-    public static void init(Map<String, Set<String>> table, RolePermissionRepo permissionRepo) {
-        rolesUrlTable = table;
-        rolePermissionRepo = permissionRepo;
-    }
-
-
-    public static Set<String> getRolePermission(String role) {
-        if (rolePermissionRepo == null) {
-            return rolesUrlTable.get(role);
-        }
+    public Set<String> getRolePermission(String role) {
 
         return rolePermissionRepo.rolePermission(role);
     }

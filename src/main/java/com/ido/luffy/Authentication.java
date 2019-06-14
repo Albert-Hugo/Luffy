@@ -1,13 +1,18 @@
 package com.ido.luffy;
 
-public interface Authentication {
+/**
+ * this interface represent authentication for login user to access protected resource
+ *
+ * @param <ID> the user id
+ */
+public interface Authentication<ID> {
 
     /**
      * the login user id
      *
      * @return
      */
-    String getUserId();
+    ID getUserId();
 
     /**
      * get the login user role
@@ -22,6 +27,13 @@ public interface Authentication {
      * @return
      */
     String getUserName();
+
+    /**
+     * the payload
+     *
+     * @return
+     */
+    Object getPayload();
 
 
 }

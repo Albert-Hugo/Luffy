@@ -11,7 +11,7 @@ import java.lang.annotation.Target;
 
 @Target({ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
-@Import(LuffyAutoConfig.class)
+@Import(LuffyConfig.class)
 public @interface EnableLuffy {
 
     @AliasFor("value")
